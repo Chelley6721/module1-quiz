@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Module 1 Quiz — The Entrepreneurial Mindset</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Lato:wght@300;400;700;900&display=swap');
+:root{
+  --bg:#0C0C0C;--dark:#141414;--panel:#1C1C1C;--card:#222;--card2:#2A2A2A;
+  --border:#363636;--gold:#C9A84C;--gold-lt:#E0C06A;--gold-dk:#9A7A28;
+  --gold-bg:#28200A;--white:#FFF;--cream:#F0EDE6;--silver:#B8B4AA;
+  --gray:#888880;--red:#C85A5A;--red-bg:#1E0A0A;--green:#5A9A6A;--green-bg:#0A1A0E;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:15px}
+body{
+  background:var(--bg);color:var(--cream);font-family:'Lato',sans-serif;
+  min-height:100vh;overflow-x:hidden;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 80% 5%, rgba(201,168,76,.07) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 40% at 10% 90%, rgba(201,168,76,.04) 0%, transparent 50%);
+}
+/* ── PROGRESS ── */
+#prog-track{position:fixed;top:0;left:0;width:100%;height:5px;background:var(--border);z-index:200}
+#prog-fill{height:100%;background:var(--gold);transition:width .5s cubic-bezier(.4,0,.2,1);width:0%}
+#prog-pct{position:fixed;top:8px;right:14px;font-size:9px;letter-spacing:2px;color:var(--gray);z-index:201}
+/* ── MENU ICON — hidden ── */
+#menu-icon{display:none}
+/* ── FOOTER ── */
+#footer-bar{position:fixed;bottom:0;left:0;width:100%;height:28px;background:var(--dark);
+  border-top:1px solid #2A2A2A;display:flex;align-items:center;justify-content:space-between;
+  padding:0 14px;z-index:200}
+#footer-left{font-size:8px;letter-spacing:2px;color:var(--gray);text-transform:uppercase}
+#footer-right{font-size:8px;letter-spacing:1.5px;color:var(--gold)}
+/* ── SCREENS ── */
+.screen{display:none;min-height:100vh;padding:30px 0 40px}
+.screen.active{display:block;animation:fadeUp .35s ease}
+#screen-cover.active{display:flex!important}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+/* ── COVER ── */
+#screen-cover{display:none;flex-direction:column;align-items:center;justify-content:center;
+  min-height:100vh;padding:30px 24px;text-align:center}
+#screen-cover.active{display:flex}
+.cov-tag{font-size:9px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:14px}
+.cov-h1{font-family:'EB Garamond',serif;font-size:clamp(28px,4.5vw,52px);font-weight:700;
+  color:var(--white);line-height:1.1;margin-bottom:4px}
+.cov-h1 span{color:var(--gold)}
+.cov-sub{font-family:'EB Garamond',serif;font-size:15px;font-style:italic;color:var(--silver);margin-bottom:22px}
+.gold-rule{width:180px;height:3px;
+  background:linear-gradient(90deg,var(--gold-dk),var(--gold),var(--gold-dk));
+  margin:0 auto 22px}
+.topics-row{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;max-width:560px;margin:0 auto 24px}
+.topic-chip{background:var(--gold-bg);border:1px solid var(--gold-dk);color:var(--gold);
+  font-size:9px;letter-spacing:1.5px;padding:4px 12px;text-transform:uppercase}
+.btn-start{background:var(--gold);color:#0C0C0C;border:none;padding:11px 32px;
+  font-family:'EB Garamond',serif;font-size:15px;font-weight:700;cursor:pointer;
+  letter-spacing:.5px;transition:all .2s;display:inline-flex;align-items:center;gap:7px}
+.btn-start:hover{background:var(--gold-lt);transform:translateY(-1px)}
+/* ── QUIZ SCREEN ── */
+#screen-quiz{padding:15px 0 80px}
+.qz-wrap{max-width:920px;margin:0 auto;padding:0 28px}
+.q-header{background:var(--dark);border-bottom:1px solid var(--border);
+  padding:10px 28px;display:flex;align-items:center;justify-content:space-between;margin-bottom:0}
+.q-type-badge{font-size:8.5px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;
+  background:var(--gold-bg);border:1px solid var(--gold-dk);padding:3px 10px}
+.q-counter{font-size:9px;letter-spacing:2px;color:var(--gray)}
+.q-text{font-family:'EB Garamond',serif;font-size:clamp(15px,2.2vw,21px);font-weight:600;
+  color:var(--white);line-height:1.45;margin:30px 28px 20px;
+  padding-bottom:16px;border-bottom:1px solid var(--border)}
+/* Options */
+.opts-grid{padding:0 28px;display:grid;gap:9px}
+.opts-2col{grid-template-columns:1fr 1fr}
+.opts-1col{grid-template-columns:1fr}
+@media(max-width:580px){.opts-2col{grid-template-columns:1fr}}
+.opt-btn{background:var(--panel);border:1.5px solid var(--border);padding:11px 15px;
+  cursor:pointer;text-align:left;width:100%;color:var(--cream);
+  font-family:'Lato',sans-serif;font-size:12.5px;line-height:1.45;
+  transition:all .18s;display:flex;align-items:flex-start;gap:11px}
+.opt-btn:hover:not(:disabled){border-color:var(--gold);background:var(--gold-bg);transform:translateY(-1px)}
+.opt-btn:disabled{cursor:default}
+.opt-letter{min-width:26px;height:26px;background:var(--card2);display:flex;
+  align-items:center;justify-content:center;font-family:'EB Garamond',serif;
+  font-size:13px;font-weight:700;color:var(--silver);flex-shrink:0;margin-top:0;
+  border:1px solid var(--border)}
+.opt-btn.correct{background:var(--gold-bg);border-color:var(--gold);color:var(--gold-lt)}
+.opt-btn.correct .opt-letter{background:var(--gold);color:#0C0C0C;border-color:var(--gold)}
+.opt-btn.wrong{background:var(--red-bg);border-color:var(--red);color:#E88888}
+.opt-btn.wrong .opt-letter{background:var(--red);color:#fff;border-color:var(--red)}
+.opt-btn.reveal{background:var(--gold-bg);border-color:var(--gold-dk);color:var(--gold-lt);opacity:.8}
+.opt-btn.reveal .opt-letter{background:var(--gold-dk);color:#0C0C0C}
+/* T/F */
+.stmt-box{margin:0 28px 16px;background:var(--card);border:1px solid var(--border);
+  border-left:3px solid var(--gold);padding:13px 17px}
+.stmt-label{font-size:8px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;
+  font-weight:700;margin-bottom:6px;display:block}
+.stmt-text{font-family:'EB Garamond',serif;font-size:17px;font-weight:600;
+  color:var(--white);line-height:1.45;font-style:italic}
+.tf-wrap{padding:0 28px;display:flex;gap:14px}
+.tf-btn{flex:1;background:var(--panel);border:1.5px solid var(--border);padding:14px 22px;
+  cursor:pointer;text-align:center;font-family:'EB Garamond',serif;font-size:17px;font-weight:700;
+  color:var(--cream);transition:all .18s}
+.tf-btn:hover:not(:disabled){border-color:var(--gold);background:var(--gold-bg);color:var(--gold-lt)}
+.tf-btn:disabled{cursor:default}
+.tf-btn.correct{background:var(--gold-bg);border-color:var(--gold);color:var(--gold-lt)}
+.tf-btn.wrong{background:var(--red-bg);border-color:var(--red);color:#E88888}
+.tf-btn.reveal{background:var(--gold-bg);border-color:var(--gold-dk);color:var(--gold-lt);opacity:.8}
+/* Feedback */
+.fb-panel{margin:14px 28px 0;border-left:3px solid var(--gold);background:var(--card);
+  padding:11px 16px;display:none;animation:fadeUp .3s ease}
+.fb-panel.show{display:block}
+.fb-panel.wrong-fb{border-left-color:var(--red)}
+.fb-lbl{font-size:8px;letter-spacing:2.5px;text-transform:uppercase;font-weight:700;
+  color:var(--gold);margin-bottom:5px;display:block}
+.wrong-fb .fb-lbl{color:#E88888}
+.fb-body{font-family:'EB Garamond',serif;font-size:13.5px;font-style:italic;
+  color:var(--silver);line-height:1.55}
+/* Section divider */
+.sec-div{margin:18px 28px 16px;display:flex;align-items:center;gap:14px}
+.sd-line{flex:1;height:1px;background:var(--border)}
+.sd-label{font-size:9px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;
+  padding:4px 14px;background:var(--gold-bg);border:1px solid var(--gold-dk)}
+/* Nav */
+.nav-row{position:fixed;bottom:28px;left:0;right:0;
+  display:flex;justify-content:space-between;align-items:center;padding:0 24px;z-index:100}
+.btn-back{background:var(--card2);color:var(--gold);border:1.5px solid var(--gold-dk);
+  padding:8px 22px;font-family:'EB Garamond',serif;font-size:13px;font-weight:700;
+  cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:6px}
+.btn-back:hover{background:var(--gold-bg)}
+.btn-nxt{background:var(--gold);color:#0C0C0C;border:none;padding:8px 24px;
+  font-family:'EB Garamond',serif;font-size:13px;font-weight:700;cursor:pointer;
+  transition:all .18s;display:flex;align-items:center;gap:6px}
+.btn-nxt:hover{background:var(--gold-lt)}
+.btn-nxt:disabled{opacity:.35;cursor:not-allowed}
+/* ── RESULTS ── */
+#screen-results{padding:30px 24px 60px}
+.res-wrap{max-width:800px;margin:0 auto}
+.res-header{background:var(--dark);border-bottom:1px solid var(--border);
+  padding:14px 22px;margin-bottom:22px;display:flex;align-items:center;gap:14px}
+.res-tag{font-size:8.5px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;
+  background:var(--gold-bg);border:1px solid var(--gold-dk);padding:3px 10px}
+.res-header-title{font-family:'EB Garamond',serif;font-size:16px;font-weight:600;color:var(--white)}
+.score-sec{display:flex;align-items:center;gap:28px;margin-bottom:22px;flex-wrap:wrap}
+.ring-wrap{position:relative;width:140px;height:140px;flex-shrink:0}
+.score-svg{width:140px;height:140px;transform:rotate(-90deg)}
+.ring-track{fill:none;stroke:var(--border);stroke-width:9}
+.ring-fill{fill:none;stroke:var(--gold);stroke-width:9;stroke-linecap:round;
+  stroke-dasharray:388;stroke-dashoffset:388;
+  transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1) .4s}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center}
+.ring-score{font-family:'EB Garamond',serif;font-size:38px;font-weight:700;color:var(--white);line-height:1}
+.ring-total{font-size:12px;color:var(--gray)}
+.ring-pct{font-size:11px;color:var(--gold);letter-spacing:1px;margin-top:2px}
+.score-info{flex:1;min-width:190px}
+.score-title{font-family:'EB Garamond',serif;font-size:24px;font-weight:700;color:var(--white);margin-bottom:6px}
+.score-sub{font-family:'EB Garamond',serif;font-size:14px;font-style:italic;color:var(--silver);
+  margin-bottom:16px;line-height:1.5}
+.badges-row{display:flex;gap:10px;flex-wrap:wrap}
+.badge-item{background:var(--card);border:1px solid var(--border);padding:8px 16px;text-align:center}
+.badge-val{font-family:'EB Garamond',serif;font-size:21px;font-weight:700;color:var(--gold);line-height:1}
+.badge-lbl{font-size:8px;letter-spacing:2px;color:var(--gray);margin-top:2px}
+.verdict-box{background:var(--gold-bg);border:1px solid var(--gold-dk);border-left:4px solid var(--gold);
+  padding:13px 18px;margin-bottom:20px;font-family:'EB Garamond',serif;font-size:14px;
+  font-style:italic;color:var(--gold-lt);line-height:1.6}
+.bd-wrap{background:var(--card);border:1px solid var(--border);margin-bottom:20px;overflow:hidden}
+.bd-hdr{background:var(--dark);border-bottom:1px solid var(--border);padding:10px 18px}
+.bd-hdr-lbl{font-size:9px;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;font-weight:700}
+.bd-table{width:100%;border-collapse:collapse}
+.bd-table th{font-size:8.5px;letter-spacing:2px;color:var(--gray);text-align:left;
+  padding:8px 18px;border-bottom:1px solid var(--border);text-transform:uppercase}
+.bd-table td{padding:10px 18px;font-size:12.5px;border-bottom:1px solid #1E1E1E;color:var(--cream)}
+.bd-table tr:last-child td{border-bottom:none}
+.bd-table tr:hover td{background:var(--panel)}
+.pill{display:inline-block;padding:2px 11px;font-size:9px;font-weight:700;letter-spacing:1px}
+.pill-pass{background:var(--gold-bg);color:var(--gold);border:1px solid var(--gold-dk)}
+.pill-fail{background:var(--red-bg);color:#E88888;border:1px solid #8B3A3A}
+.res-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.btn-retry{background:transparent;color:var(--gold);border:1.5px solid var(--gold);
+  padding:10px 28px;font-family:'EB Garamond',serif;font-size:14px;font-weight:700;
+  cursor:pointer;transition:all .18s}
+.btn-retry:hover{background:var(--gold-bg)}
+</style>
+
+</head>
+<body>
+
+<div id="prog-track"><div id="prog-fill"></div></div>
+<div id="prog-pct">0%</div>
+
+<!-- COVER -->
+<div id="screen-cover" class="screen active">
+  <div class="cov-tag">Module 1  ·  Assessment</div>
+  <div class="cov-h1">Module <span>1</span></div>
+  <div class="cov-sub">Introduction · Relevance · ASEAN Integration · Global Trends</div>
+  <div class="gold-rule"></div>
+  <div class="topics-row"><span class="topic-chip">Entrepreneurial Mindset</span><span class="topic-chip">Types of Entrepreneurship</span><span class="topic-chip">Why Study Entrepreneurship</span><span class="topic-chip">Global Trends</span><span class="topic-chip">ASEAN Integration</span></div>
+  <button class="btn-start" onclick="startQuiz()">Begin Assessment &nbsp;▶</button>
+</div>
+
+<!-- QUIZ -->
+<div id="screen-quiz" class="screen">
+  <div class="qz-wrap">
+    <div class="q-header">
+      <span class="q-type-badge" id="q-type-badge">Question</span>
+      <span class="q-counter" id="q-counter">Question 1 of 15</span>
+    </div>
+    <div id="mc-block">
+      <div class="q-text" id="q-text-mc"></div>
+      <div class="opts-grid opts-2col" id="opts-grid"></div>
+    </div>
+    <div id="tf-block" style="display:none">
+      <div class="q-text" style="margin-bottom:14px">Evaluate the following statement:</div>
+      <div class="stmt-box">
+        <span class="stmt-label">Statement</span>
+        <div class="stmt-text" id="tf-stmt"></div>
+      </div>
+      <div class="tf-wrap" id="tf-opts"></div>
+    </div>
+    <div class="fb-panel" id="fb-panel">
+      <span class="fb-lbl" id="fb-lbl">CORRECT</span>
+      <div class="fb-body" id="fb-body"></div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="screen-results" class="screen">
+  <div class="res-wrap">
+    <div class="res-header">
+      <span class="res-tag">Assessment Complete</span>
+      <span class="res-header-title">Module 1 · The Entrepreneurial Mindset</span>
+    </div>
+    <div class="score-sec">
+      <div class="ring-wrap">
+        <svg class="score-svg" viewBox="0 0 140 140">
+          <circle class="ring-track" cx="70" cy="70" r="62"/>
+          <circle class="ring-fill" id="ring-fill" cx="70" cy="70" r="62"/>
+        </svg>
+        <div class="ring-center">
+          <div class="ring-score" id="res-score">0</div>
+          <div class="ring-total">/ 15</div>
+          <div class="ring-pct" id="res-pct">0%</div>
+        </div>
+      </div>
+      <div class="score-info">
+        <div class="score-title" id="res-title">—</div>
+        <div class="score-sub" id="res-sub">—</div>
+        <div class="badges-row">
+          <div class="badge-item"><div class="badge-val" id="res-correct">0</div><div class="badge-lbl">Correct</div></div>
+          <div class="badge-item"><div class="badge-val" id="res-wrong">0</div><div class="badge-lbl">Incorrect</div></div>
+          <div class="badge-item"><div class="badge-val" id="res-pct2">0%</div><div class="badge-lbl">Score</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="verdict-box" id="res-verdict"></div>
+    <div class="bd-wrap">
+      <div class="bd-hdr"><span class="bd-hdr-lbl">Score by Section</span></div>
+      <table class="bd-table" id="bd-tbl"></table>
+    </div>
+    <div class="res-actions">
+      <button class="btn-retry" onclick="resetQuiz()">↺ &nbsp;Retake Quiz</button>
+    </div>
+  </div>
+</div>
+
+<div class="nav-row" id="nav-row" style="display:none">
+  <button class="btn-back" id="btn-back" onclick="goBack()">◀ &nbsp;Back</button>
+  <button class="btn-nxt" id="btn-nxt" onclick="nextQ()" disabled>Next &nbsp;▶</button>
+</div>
+
+<div id="footer-bar">
+  <span id="footer-left">THE ENTREPRENEURIAL MINDSET</span>
+  <span id="footer-right">Module 1</span>
+</div>
+
+<script>
+const MC = [{"q": "Which of the following BEST defines the entrepreneurial mindset?", "opts": ["A fixed set of business rules that guarantees financial success", "A way of thinking that identifies opportunities, solves problems, and creates value in uncertain situations", "The ability to memorize frameworks and apply them rigidly", "A personality trait only naturally gifted individuals are born with"], "ans": 1, "exp": "The entrepreneurial mindset is a WAY OF THINKING \u2014 not a fixed trait. It focuses on spotting opportunities, solving problems, and creating value regardless of circumstances."}, {"q": "Which key trait describes taking calculated risks instead of reckless decisions?", "opts": ["Opportunity-focused", "Proactive", "Risk-aware", "Resilient"], "ans": 2, "exp": "Risk-aware means assessing and managing risk \u2014 not avoiding it entirely. Calculated risk-taking separates entrepreneurs from both reckless gamblers and risk-avoiders."}, {"q": "An entrepreneur who starts a business because of lack of job opportunities or financial need is classified as:", "opts": ["Opportunity-Driven", "Innovation-Driven", "Necessity-Driven", "Lifestyle-Driven"], "ans": 2, "exp": "Necessity-Driven Entrepreneurship is motivated by survival and income generation \u2014 often resulting in small-scale or informal businesses, contrasting with Opportunity-Driven ventures."}, {"q": "Which government agencies in the Philippines prioritize entrepreneurship for national development?", "opts": ["PNP, AFP, and DFA", "DTI, DOST, and TESDA", "CHED, DepEd, and DILG", "SEC, BSP, and BIR"], "ans": 1, "exp": "The Department of Trade and Industry (DTI), Department of Science and Technology (DOST), and TESDA all actively prioritize entrepreneurship as a Philippine national development strategy."}, {"q": "SMEs in the Philippines make up approximately what percentage of all businesses? (PSA 2022)", "opts": ["75%", "85%", "92%", "99.5%"], "ans": 3, "exp": "SMEs account for 99.5% of all Philippine businesses and employ approximately 65% of the total workforce \u2014 making them the true backbone of the Philippine economy."}, {"q": "The ASEAN Economic Community (AEC) was established to create a:", "opts": ["Military alliance among Southeast Asian nations", "Single currency system across all ASEAN members", "Single market and production base among 10 Southeast Asian nations", "UN branch for Asian economic development"], "ans": 2, "exp": "The AEC (est. 2015) aims to create a single market and production base among 10 member nations, promoting free flow of goods, services, investments, capital, and skilled labor."}, {"q": "Which represents an OPPORTUNITY created by ASEAN Integration for Filipino entrepreneurs?", "opts": ["Decreased competition from local businesses", "Elimination of all taxes within ASEAN", "Access to a 670-million consumer market across Southeast Asia", "Automatic premium pricing for Filipino products in all ASEAN markets"], "ans": 2, "exp": "ASEAN Integration opens access to a 670-million consumer market \u2014 a massive expansion opportunity for Filipino SMEs and startups beyond the domestic market."}, {"q": "Which global trend refers to the growing demand for eco-friendly, ethical, and socially responsible businesses?", "opts": ["Innovation-Driven Economy", "Gig Economy", "Sustainability & Social Responsibility", "Digital Transformation"], "ans": 2, "exp": "Sustainability & Social Responsibility reflects consumers' growing preference for businesses aligned with environmental and social values \u2014 fueling the rise of social entrepreneurship."}, {"q": "Which entrepreneurial trait means adjusting strategies and approaches when market conditions change?", "opts": ["Resilient", "Adaptable", "Proactive", "Innovative"], "ans": 1, "exp": "Adaptability means adjusting to change and uncertainty \u2014 a critical entrepreneurial trait since markets, technology, and customer needs are constantly evolving."}, {"q": "Studying entrepreneurship helps individuals create value. Which of the following is that CORE economic skill?", "opts": ["Memorizing business registration steps", "Recognizing and creating value in the market", "Following proven formulas exactly", "Studying the history of large corporations"], "ans": 1, "exp": "Recognizing and creating value is the most fundamental economic skill. Entrepreneurship education develops this skill alongside critical thinking, financial literacy, and leadership."}];
+const TF = [{"s": "The entrepreneurial mindset is an innate personality trait that cannot be learned or developed by anyone.", "ans": false, "exp": "FALSE. The entrepreneurial mindset is a skill set that CAN be deliberately learned, practiced, and developed through education, experience, and intentional habit-building."}, {"s": "Opportunity-Driven Entrepreneurship is commonly found in startups and tech businesses focused on expansion and long-term success.", "ans": true, "exp": "TRUE. Opportunity-Driven Entrepreneurship involves identifying market gaps and is characterized by innovation, planning, scalability, and long-term growth orientation."}, {"s": "ASEAN Integration creates ONLY benefits for Filipino entrepreneurs and poses no competitive challenges.", "ans": false, "exp": "FALSE. ASEAN Integration creates BOTH opportunities AND challenges \u2014 including increased competition from lower-cost imports from Vietnam, Indonesia, and Thailand."}, {"s": "The Philippines is a signatory to the RCEP, which is the largest free trade agreement in the world.", "ans": true, "exp": "TRUE. The Philippines is a signatory to the Regional Comprehensive Economic Partnership (RCEP) \u2014 the largest free trade agreement globally."}, {"s": "Resilience means avoiding all challenging situations to protect the business from potential failure.", "ans": false, "exp": "FALSE. Resilience means LEARNING FROM FAILURE and continuing to improve. Entrepreneurs face difficulties head-on, adapt, and persist toward their goals."}];
+const IS_FINAL = false;
+const N_MC = MC.length, N_TF = TF.length, TOTAL = N_MC + N_TF;
+
+let idx=0, score=0, answered=false;
+let mcOk=0, tfOk=0;
+// For final: track per-module
+let modScores={};
+if(IS_FINAL){ MC.forEach(q=>{ if(!modScores[q.mod]) modScores[q.mod]={ok:0,total:0}; modScores[q.mod].total++; }); }
+
+function qAt(i){
+  if(i<N_MC) return {type:'mc',data:MC[i]};
+  return {type:'tf',data:TF[i-N_MC]};
+}
+
+function startQuiz(){
+  idx=0;score=0;answered=false;mcOk=0;tfOk=0;
+  if(IS_FINAL) Object.keys(modScores).forEach(k=>{modScores[k].ok=0;});
+  showScreen('screen-quiz');
+  document.getElementById('nav-row').style.display='flex';
+  document.getElementById('footer-right').textContent='Module 1 · Quiz';
+  loadQ();
+}
+
+function loadQ(){
+  answered=false;
+  document.getElementById('fb-panel').className='fb-panel';
+  document.getElementById('btn-nxt').disabled=true;
+  const pct=Math.round((idx/TOTAL)*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-pct').textContent=pct+'%';
+  document.getElementById('q-counter').textContent='Question '+(idx+1)+' of '+TOTAL;
+  const q=qAt(idx);
+  if(q.type==='mc'){
+    document.getElementById('q-type-badge').textContent=IS_FINAL?q.data.mod:'Multiple Choice';
+    document.getElementById('mc-block').style.display='block';
+    document.getElementById('tf-block').style.display='none';
+    document.getElementById('q-text-mc').textContent=q.data.q;
+    const grid=document.getElementById('opts-grid');
+    grid.innerHTML='';
+    ['A','B','C','D'].forEach((L,i)=>{
+      const btn=document.createElement('button');
+      btn.className='opt-btn';
+      btn.innerHTML='<span class="opt-letter">'+L+'</span><span>'+q.data.opts[i]+'</span>';
+      btn.onclick=()=>pickMC(i);
+      grid.appendChild(btn);
+    });
+  } else {
+    document.getElementById('q-type-badge').textContent='True or False';
+    document.getElementById('mc-block').style.display='none';
+    document.getElementById('tf-block').style.display='block';
+    document.getElementById('tf-stmt').textContent=q.data.s;
+    const wrap=document.getElementById('tf-opts');
+    wrap.innerHTML='';
+    ['True','False'].forEach((lbl,i)=>{
+      const btn=document.createElement('button');
+      btn.className='tf-btn';btn.textContent=lbl;
+      btn.onclick=()=>pickTF(i===0);
+      wrap.appendChild(btn);
+    });
+  }
+}
+
+function pickMC(i){
+  if(answered)return; answered=true;
+  const q=MC[idx];
+  document.querySelectorAll('.opt-btn').forEach(b=>b.disabled=true);
+  const btns=document.querySelectorAll('.opt-btn');
+  const fp=document.getElementById('fb-panel');
+  const fl=document.getElementById('fb-lbl');
+  if(i===q.ans){
+    btns[i].classList.add('correct'); score++; mcOk++;
+    if(IS_FINAL) modScores[q.mod].ok++;
+    fp.className='fb-panel show';
+    fl.textContent='✓  CORRECT'; fp.style.borderLeftColor='var(--gold)'; fl.style.color='var(--gold)';
+  } else {
+    btns[i].classList.add('wrong'); btns[q.ans].classList.add('reveal');
+    fp.className='fb-panel show wrong-fb';
+    fl.textContent='✗  INCORRECT'; fp.style.borderLeftColor='var(--red)'; fl.style.color='#E88888';
+  }
+  document.getElementById('fb-body').textContent=q.exp;
+  document.getElementById('btn-nxt').disabled=false;
+  document.getElementById('btn-nxt').textContent=idx<TOTAL-1?'Next  ▶':'View Results  ▶';
+}
+
+function pickTF(val){
+  if(answered)return; answered=true;
+  const q=TF[idx-N_MC];
+  document.querySelectorAll('.tf-btn').forEach(b=>b.disabled=true);
+  const btns=document.querySelectorAll('.tf-btn');
+  const fp=document.getElementById('fb-panel');
+  const fl=document.getElementById('fb-lbl');
+  if(val===q.ans){
+    (val?btns[0]:btns[1]).classList.add('correct'); score++; tfOk++;
+    fp.className='fb-panel show';
+    fl.textContent='✓  CORRECT'; fp.style.borderLeftColor='var(--gold)'; fl.style.color='var(--gold)';
+  } else {
+    (val?btns[0]:btns[1]).classList.add('wrong');
+    (q.ans?btns[0]:btns[1]).classList.add('reveal');
+    fp.className='fb-panel show wrong-fb';
+    fl.textContent='✗  INCORRECT'; fp.style.borderLeftColor='var(--red)'; fl.style.color='#E88888';
+  }
+  document.getElementById('fb-body').textContent=q.exp;
+  document.getElementById('btn-nxt').disabled=false;
+  document.getElementById('btn-nxt').textContent=idx<TOTAL-1?'Next  ▶':'View Results  ▶';
+}
+
+function nextQ(){
+  idx++;
+  if(idx<TOTAL){ loadQ(); }
+  else{ showResults(); }
+}
+
+function goBack(){
+  if(idx===0){
+    document.getElementById('nav-row').style.display='none';
+    document.getElementById('prog-fill').style.width='0%';
+    document.getElementById('prog-pct').textContent='0%';
+    document.getElementById('footer-right').textContent='Module 1';
+    showScreen('screen-cover');
+  }
+}
+
+function showResults(){
+  document.getElementById('prog-fill').style.width='100%';
+  document.getElementById('prog-pct').textContent='100%';
+  document.getElementById('footer-right').textContent='Module 1 · Results';
+  document.getElementById('btn-nxt').style.display='none';
+  document.getElementById('btn-back').style.display='none';
+  showScreen('screen-results');
+  const pct=Math.round((score/TOTAL)*100);
+  document.getElementById('res-score').textContent=score;
+  document.getElementById('res-pct').textContent=pct+'%';
+  document.getElementById('res-correct').textContent=score;
+  document.getElementById('res-wrong').textContent=TOTAL-score;
+  document.getElementById('res-pct2').textContent=pct+'%';
+  const ring=document.getElementById('ring-fill');
+  ring.style.strokeDashoffset=388-(pct/100)*388;
+  ring.style.stroke=pct>=80?'#6EC87A':pct>=60?'#C9A84C':'#C85A5A';
+  let title,sub,verdict;
+  if(pct>=90){title='Excellent!';sub='Outstanding mastery of the material.';verdict='🏆 MASTERY — Exceptional performance. You are fully prepared to move forward with confidence.';}
+  else if(pct>=75){title='Well Done!';sub='Strong understanding of core concepts.';verdict='✅ PROFICIENT — Great work! Briefly review any questions you missed before proceeding.';}
+  else if(pct>=60){title='Developing — Keep Going!';sub='Foundational concepts understood; some areas need review.';verdict='📖 REVIEW RECOMMENDED — You passed, but revisiting the lesson slides on missed topics will strengthen your foundation.';}
+  else{title='More Review Needed';sub='Key concepts require further study.';verdict='⚠️ REVISIT THE LESSON — Please review the module slides carefully and retake this quiz for a stronger result.';}
+  document.getElementById('res-title').textContent=title;
+  document.getElementById('res-sub').textContent=sub;
+  document.getElementById('res-verdict').textContent=verdict;
+  // Breakdown
+  const tbl=document.getElementById('bd-tbl');
+  let rows='<tr><th>Section</th><th>Score</th><th>Pct</th><th>Status</th></tr>';
+  if(IS_FINAL){
+    Object.entries(modScores).forEach(([mod,d])=>{
+      const p=Math.round((d.ok/d.total)*100);
+      rows+=`<tr><td>${mod}</td><td>${d.ok}/${d.total}</td><td>${p}%</td><td><span class="pill ${p>=60?'pill-pass':'pill-fail'}">${p>=60?'PASSED':'REVIEW'}</span></td></tr>`;
+    });
+  } else {
+    const mp=Math.round((mcOk/N_MC)*100);
+    rows+=`<tr><td>Multiple Choice (${N_MC} items)</td><td>${mcOk}/${N_MC}</td><td>${mp}%</td><td><span class="pill ${mp>=60?'pill-pass':'pill-fail'}">${mp>=60?'PASSED':'REVIEW'}</span></td></tr>`;
+    if(N_TF>0){const tp=Math.round((tfOk/N_TF)*100);rows+=`<tr><td>True or False (${N_TF} items)</td><td>${tfOk}/${N_TF}</td><td>${tp}%</td><td><span class="pill ${tp>=60?'pill-pass':'pill-fail'}">${tp>=60?'PASSED':'REVIEW'}</span></td></tr>`;}
+  }
+  rows+=`<tr><td><strong>OVERALL</strong></td><td><strong>${score}/${TOTAL}</strong></td><td><strong>${pct}%</strong></td><td><span class="pill ${pct>=60?'pill-pass':'pill-fail'}">${pct>=60?'PASSED':'FAILED'}</span></td></tr>`;
+  tbl.innerHTML=rows;
+}
+
+function resetQuiz(){
+  idx=0;score=0;answered=false;mcOk=0;tfOk=0;
+  if(IS_FINAL) Object.keys(modScores).forEach(k=>{modScores[k].ok=0;});
+  document.getElementById('prog-fill').style.width='0%';
+  document.getElementById('prog-pct').textContent='0%';
+  document.getElementById('ring-fill').style.strokeDashoffset='388';
+  document.getElementById('btn-nxt').style.display='flex';
+  document.getElementById('btn-back').style.display='flex';
+  document.getElementById('btn-nxt').disabled=true;
+  document.getElementById('nav-row').style.display='none';
+  document.getElementById('footer-right').textContent='Module 1';
+  showScreen('screen-cover');
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+</script>
+</body>
+</html>
